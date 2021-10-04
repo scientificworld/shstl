@@ -4,3 +4,8 @@ function @.miscellaneous.alias() {
 		eval 'function '"$1"'(){ '"$2"' "$@"; }'
 	fi
 }
+function @.miscellaneous.alias_no_argument() {
+	if [ -n "$2" ]; then
+		eval "function $1(){ $2; }"
+	fi
+}

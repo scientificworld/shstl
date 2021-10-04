@@ -35,3 +35,7 @@ So I need to switch to the directory of the current file first.
 ### @import
 
 The alias of `@.miscellaneous.import`.
+
+## dependency
+
+miscellaneous/alias

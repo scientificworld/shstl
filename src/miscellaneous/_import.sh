@@ -1,5 +1,5 @@
 #!/bin/bash
-#@include alias.sh
+#@ include alias.sh
 function @.miscellaneous.import() {
 	if [ ! -n "$1" ]; then
 		return 1
