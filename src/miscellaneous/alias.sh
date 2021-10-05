@@ -9,3 +9,4 @@ function @.miscellaneous.alias_no_argument() {
 		eval "function $1(){ $2; }"
 	fi
 }
+@.miscellaneous.alias "@alias" "@.miscellaneous.alias"
