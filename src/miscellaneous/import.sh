@@ -1,10 +1,5 @@
 #!/bin/bash
-#!/bin/bash
-function @.miscellaneous.alias() {
-	if [ -n "$2" ]; then
-		eval 'function '"$1"'(){ '"$2"' "$@"; }'
-	fi
-}
+#@ include alias.sh
 function @.miscellaneous.import() {
 	if [ ! -n "$1" ]; then
 		return 1
@@ -20,4 +15,4 @@ function @.miscellaneous.import() {
 	. "$1"
 	cd "$_original_path"
 }
-@.miscellaneous.alias @import @.miscellaneous.import
+@.alias "@import" "@.miscellaneous.import"
