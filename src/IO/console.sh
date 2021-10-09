@@ -2,6 +2,15 @@
 function @.io.console.out() {
 	echo -n "$@"
 }
+function @.io.console.error() {
+	if [ ! -n "$1" ]; then
+		return 1
+	fi
+	if [ ! -n "$2" ]; then
+		set "$1" 2
+	fi
+	echo -n "$1" 1>&"$2"
+}
 function @.io.console.in() {
 	local _input
 	read _input
