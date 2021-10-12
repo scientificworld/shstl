@@ -1,40 +1,37 @@
 #!/bin/bash
-_include() {
+main() {
 	shift 2
-	for l in $@; do
-		if [ -f "$l" ]; then
-			cat "$l"
-		fi
+	for l in "$@"; do
+		local content=$'\n'"$(cat "$l")"
+		cd "$(dirname "$l")"
+		local i=1
+		while [[ $i -le $(echo "$content" | sed -n '$=') ]]; do
+			line="$(echo "$content" | sed -n ${i}p)"
+			local element
+			local k=0
+			for j in $line; do
+				element[$k]="$j"
+				k=$[$k+1]
+			done
+			if [ "${element[0]}" == "#@" ]; then
+				case "${element[1]}" in
+					"include")
+						content="$(echo "$content" | sed -n 1,$[$i-1]p)"$'\n'"$(main "${element[@]}")"$'\n'"$(echo "$content" | sed -n $[$i+1],\$p)"
+						;;
+				esac
+			fi
+			if [[ "${element[0]}" == "#@"* ]]; then
+				case "${element[0]}" in
+					"#@include")
+						content="$(echo "$content" | sed -n 1,$[$i-1]p)"$'\n'"$(main "" "${element[@]}")"$'\n'"$(echo "$content" | sed -n $[$i+1],\$p)"
+						;;
+				esac
+			fi
+			i=$[$i+1]
+		done
+		echo "$content" | sed -n 2,\$p
 	done
 }
 if [ -f "$1" ]; then
-	content=$'\n'"$(cat "$1")"
-	cd "$(dirname "$1")"
-	i=1
-#	for i in $(seq 1 $(echo "$content" | sed -n '$=')); do
-	while [[ $i -le $(echo "$content" | sed -n '$=') ]]; do
-		line="$(echo "$content" | sed -n ${i}p)"
-		declare -a element
-		k=0
-		for j in $line; do
-			element[$k]="$j"
-			k=$[$k+1]
-		done
-		if [ "${element[0]}" == "#@" ]; then
-			case "${element[1]}" in
-				"include")
-					content="$(echo "$content" | sed -n 1,$[$i-1]p)"$'\n'"$(_include "${element[@]}")"$'\n'"$(echo "$content" | sed -n $[$i+1],\$p)"
-					;;
-			esac
-		fi
-		if [[ "${element[0]}" == "#@"* ]]; then
-			case "${element[0]}" in
-				"#@include")
-					content="$(echo "$content" | sed -n 1,$[$i-1]p)"$'\n'"$(_include "" "${element[@]}")"$'\n'"$(echo "$content" | sed -n $[$i+1],\$p)"
-					;;
-			esac
-		fi
-		i=$[$i+1]
-	done
-	echo "$content" | sed -n 2,\$p
+	main "" "" "$1"
 fi
