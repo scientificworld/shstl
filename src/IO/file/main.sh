@@ -17,3 +17,6 @@ function @.io.file.add() {
 	fi
 	echo -n "$2" >> "$1"
 }
+@.io.file.write "test.txt" '0'
+@.io.file.add "test.txt" '1'
+@.io.file.read "test.txt"
