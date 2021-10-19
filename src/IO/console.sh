@@ -32,3 +32,10 @@ function @.io.console.get_silent() {
 	read -sn"$1" _input
 	echo -n "$_input"
 }
+function @.io.console.printf() {
+	if [ ! -n "$1" ]; then
+		return 1
+	fi
+	printf "$@" 2> /dev/null
+}
+
